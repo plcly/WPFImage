@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Update="AppRelease.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="App.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
