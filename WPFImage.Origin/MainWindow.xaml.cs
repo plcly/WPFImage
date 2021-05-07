@@ -49,10 +49,40 @@ namespace WPFImage.Origin
             }
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Right)
+            {
+                ExecuteNextImage();
+            }
+            if (e.Key == Key.Left)
+            {
+                ExecutePreImage();
+            }
+            if (e.Key == Key.Enter)
+            {
+                var fileName = fileList[currentIndex];
+                var destName = GetDestName();
+                File.Copy(fileName, destName);
+            }
+        }
+
+        private void ExecutePreImage()
+        {
+            isNext = false;
+            currentIndex--;
+            ShowImage();
+        }
+
+        private void ExecuteNextImage()
+        {
+            isNext = true;
+            currentIndex++;
+            ShowImage();
+        }
+
         private void ShowImage()
         {
-            App.Current.Dispatcher.Invoke(() => LoadMemoryImage());
-
             if (imageDic.Keys.Max() < currentIndex)
             {
                 currentIndex = imageDic.Keys.Max();
@@ -67,7 +97,10 @@ namespace WPFImage.Origin
                 SetAllHide();
                 image.Visibility = Visibility.Visible;
             }
+            App.Current.Dispatcher.Invoke(() => LoadMemoryImage()
+            , System.Windows.Threading.DispatcherPriority.Background);
         }
+
         private void SetAllHide()
         {
             foreach (var image in imageDic)
@@ -81,7 +114,7 @@ namespace WPFImage.Origin
             if (imageDic == null)
             {
                 imageDic = new Dictionary<int, Image>();
-                for (int i = 0; i < fileList.Count && i < preLoadNum; i++)
+                for (int i = 0; i < fileList.Count && i < preLoadNum*2; i++)
                 {
                     var bitMapImage = new BitmapImage(new Uri(fileList[i]));
                     var image = new Image();
@@ -139,38 +172,6 @@ namespace WPFImage.Origin
                     imageDic.Remove(imageDic.Keys.Max());
                 }
             }
-        }
-
-        private void Window_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Right)
-            {
-                ExecuteNextImage();
-            }
-            if (e.Key == Key.Left)
-            {
-                ExecutePreImage();
-            }
-            if (e.Key == Key.Enter)
-            {
-                var fileName = fileList[currentIndex];
-                var destName = GetDestName();
-                File.Copy(fileName, destName);
-            }
-        }
-
-        private void ExecutePreImage()
-        {
-            isNext = false;
-            currentIndex--;
-            ShowImage();
-        }
-
-        private void ExecuteNextImage()
-        {
-            isNext = true;
-            currentIndex++;
-            ShowImage();
         }
 
         private string GetDestName()
