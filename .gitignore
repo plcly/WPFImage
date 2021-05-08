@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /WPFImage/App.config
 /WPFImage.Origin/App.config
+/WPFImage.ChainImage/App.config
