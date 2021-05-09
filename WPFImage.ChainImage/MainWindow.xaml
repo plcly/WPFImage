@@ -8,6 +8,7 @@
     Title="MainWindow"
     Width="1200"
     Height="800"
+    Icon="icon.png"
     KeyUp="Window_KeyUp"
     mc:Ignorable="d"
     >

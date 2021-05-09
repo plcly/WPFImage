@@ -97,6 +97,7 @@ namespace WPFImage.ChainImage
                 var fileName = fileList[currentIndex];
                 var destName = GetDestName();
                 File.Copy(fileName, destName);
+                MessageBox.Show("完成");
             }
         }
 
