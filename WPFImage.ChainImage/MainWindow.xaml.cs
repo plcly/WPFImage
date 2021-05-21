@@ -84,6 +84,7 @@ namespace WPFImage.ChainImage
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
+
             if (e.Key == Key.Right)
             {
                 ExecuteNextImage();
@@ -125,7 +126,7 @@ namespace WPFImage.ChainImage
             {
                 currentIndex = 0;
             }
-            this.Title = System.IO.Path.GetFileName(fileList[currentIndex]);
+            this.Title = $"{System.IO.Path.GetFileName(fileList[currentIndex])}({currentIndex+1}/{fileList.Count})";
             var chainIndex = currentIndex % (preLoadNum * 2);
             var chainImage = listChainImage.FirstOrDefault(p => p.ChainIndex == chainIndex);
 
