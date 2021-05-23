@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -25,6 +26,7 @@ namespace WPFImage.ChainImage
         private List<string> fileList;
         private int currentIndex;
         private string folder;
+        private string destFolder;
         private int preLoadNum;
         private bool isNext;
         List<ChainImage> listChainImage;
@@ -35,6 +37,7 @@ namespace WPFImage.ChainImage
             InitializeComponent();
 
             folder = ConfigurationManager.AppSettings["folder"];
+            destFolder = ConfigurationManager.AppSettings["destFolder"];
             preLoadNum = int.Parse(ConfigurationManager.AppSettings["preLoadNum"]);
             if (Directory.Exists(folder))
             {
@@ -184,6 +187,31 @@ namespace WPFImage.ChainImage
                 return System.IO.Path.Combine(folder, today + ".JPG");
             }
             return System.IO.Path.Combine(folder, today + "-" + (files.Length) + ".JPG");
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var today = DateTime.Now.ToString("yyyyMMdd");
+            listChainImage = null;
+            MyGrid.Children.Clear();
+            GC.Collect();
+            var allFile = Directory.GetFiles(folder);
+            foreach (var file in allFile)
+            {
+                var fileName = System.IO.Path.GetFileName(file);
+                if (fileName.StartsWith(today))
+                {
+                    var destFileName = System.IO.Path.Combine(destFolder, fileName);
+                    if (!File.Exists(destFileName))
+                    {
+                        File.Copy(file, destFileName);
+                    }
+                }
+                else
+                {
+                    FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                }
+            }
         }
     }
 
