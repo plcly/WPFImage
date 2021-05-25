@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,8 +59,7 @@ namespace WPFImage.ChainImage
         private void InitChainImage()
         {
             listChainImage = new List<ChainImage>();
-            var bitMapImage0 = new BitmapImage(new Uri(fileList[0]));
-            bitMapImage0.Freeze();
+            BitmapImage bitMapImage0 = InitBitMap(fileList[0]);
             var chainImage0 = new ChainImage
             {
                 ChainIndex = 0,
@@ -69,8 +69,8 @@ namespace WPFImage.ChainImage
             listChainImage.Add(chainImage0);
             for (int i = 1; i < preLoadNum * 2 && i < fileList.Count; i++)
             {
-                var bitMapImage = new BitmapImage(new Uri(fileList[i]));
-                bitMapImage.Freeze();
+                var bitMapImage = InitBitMap(fileList[i]);
+               
                 var chainImage = new ChainImage
                 {
                     ChainIndex = i,
@@ -83,6 +83,24 @@ namespace WPFImage.ChainImage
             }
             chainImage0.PreImage = listChainImage.Last();
             listChainImage.Last().NextImage = chainImage0;
+        }
+
+        private BitmapImage InitBitMap(string file)
+        {
+            var bitMapImage = new BitmapImage();
+            if (File.Exists(file))
+            {
+                bitMapImage.BeginInit();
+                bitMapImage.CacheOption = BitmapCacheOption.OnLoad;
+                using (var fileStream = File.OpenRead(file))
+                {
+                    bitMapImage.StreamSource = fileStream;
+                    bitMapImage.EndInit();
+                    bitMapImage.Freeze();
+                }
+            }
+            
+            return bitMapImage;
         }
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
@@ -129,7 +147,7 @@ namespace WPFImage.ChainImage
             {
                 currentIndex = 0;
             }
-            this.Title = $"{System.IO.Path.GetFileName(fileList[currentIndex])}({currentIndex+1}/{fileList.Count})";
+            this.Title = $"{System.IO.Path.GetFileName(fileList[currentIndex])}({currentIndex + 1}/{fileList.Count})";
             var chainIndex = currentIndex % (preLoadNum * 2);
             var chainImage = listChainImage.FirstOrDefault(p => p.ChainIndex == chainIndex);
 
@@ -160,8 +178,7 @@ namespace WPFImage.ChainImage
                 {
                     var memoryChainIndex = (displayIndex + preLoadNum) % (preLoadNum * 2);
                     var chainImage = listChainImage.FirstOrDefault(p => p.ChainIndex == memoryChainIndex);
-                    var bitMapImage = new BitmapImage(new Uri(fileList[displayIndex + preLoadNum]));
-                    bitMapImage.Freeze();
+                    var bitMapImage = InitBitMap(fileList[displayIndex + preLoadNum]);
                     chainImage.ImageControl.Source = bitMapImage;
                 }
             }
@@ -171,8 +188,7 @@ namespace WPFImage.ChainImage
                 {
                     var memoryChainIndex = (displayIndex + 1 - preLoadNum) % (preLoadNum * 2);
                     var chainImage = listChainImage.FirstOrDefault(p => p.ChainIndex == memoryChainIndex);
-                    var bitMapImage = new BitmapImage(new Uri(fileList[displayIndex + 1 - preLoadNum]));
-                    bitMapImage.Freeze();
+                    var bitMapImage = InitBitMap(fileList[displayIndex + 1 - preLoadNum]);
                     chainImage.ImageControl.Source = bitMapImage;
                 }
             }
@@ -194,7 +210,7 @@ namespace WPFImage.ChainImage
             var today = DateTime.Now.ToString("yyyyMMdd");
             listChainImage = null;
             MyGrid.Children.Clear();
-            GC.Collect();
+            GC.Collect(2);
             var allFile = Directory.GetFiles(folder);
             foreach (var file in allFile)
             {
