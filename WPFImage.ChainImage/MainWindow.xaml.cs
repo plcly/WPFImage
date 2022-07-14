@@ -31,6 +31,8 @@ namespace WPFImage.ChainImage
         private int preLoadNum;
         private bool isNext;
         List<ChainImage> listChainImage;
+        private bool deleteWhenClose;
+        private bool isLoading;
         private static readonly object lockObj = new object();
 
         public MainWindow()
@@ -40,6 +42,7 @@ namespace WPFImage.ChainImage
             folder = ConfigurationManager.AppSettings["folder"];
             destFolder = ConfigurationManager.AppSettings["destFolder"];
             preLoadNum = int.Parse(ConfigurationManager.AppSettings["preLoadNum"]);
+            deleteWhenClose = bool.Parse(ConfigurationManager.AppSettings["deleteWhenClose"]);
             if (Directory.Exists(folder))
             {
                 fileList = Directory.GetFiles(folder, "*.jpg")
@@ -164,7 +167,11 @@ namespace WPFImage.ChainImage
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
+                    if(isLoading)
+                        return;
+                    isLoading = true;
                     LoadMemoryChainImage(currentIndex);
+                    isLoading = false;
                 }
             , System.Windows.Threading.DispatcherPriority.Background);
             }
@@ -211,21 +218,24 @@ namespace WPFImage.ChainImage
             listChainImage = null;
             MyGrid.Children.Clear();
             GC.Collect(2);
-            var allFile = Directory.GetFiles(folder);
-            foreach (var file in allFile)
+            if (deleteWhenClose)
             {
-                var fileName = System.IO.Path.GetFileName(file);
-                if (fileName.StartsWith(today))
+                var allFile = Directory.GetFiles(folder);
+                foreach (var file in allFile)
                 {
-                    var destFileName = System.IO.Path.Combine(destFolder, fileName);
-                    if (!File.Exists(destFileName))
+                    var fileName = System.IO.Path.GetFileName(file);
+                    if (fileName.StartsWith(today))
                     {
-                        File.Copy(file, destFileName);
+                        var destFileName = System.IO.Path.Combine(destFolder, fileName);
+                        if (!File.Exists(destFileName))
+                        {
+                            File.Copy(file, destFileName);
+                        }
                     }
-                }
-                else
-                {
-                    FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    else
+                    {
+                        FileSystem.DeleteFile(file, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
+                    }
                 }
             }
         }
