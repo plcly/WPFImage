@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFImage", "WPFImage\WPFImage.csproj", "{4522A3CE-41FA-423C-8C8C-9A18F13F5B4C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFImage.Origin", "WPFImage.Origin\WPFImage.Origin.csproj", "{712D1940-DE87-4E5A-AC94-A0F15B956A4C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFImage.ChainImage", "WPFImage.ChainImage\WPFImage.ChainImage.csproj", "{38CDE89F-DCFF-4A4A-AE71-100866EBCE41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFImage.ChainImage", "WPFImage.ChainImage\WPFImage.ChainImage.csproj", "{38CDE89F-DCFF-4A4A-AE71-100866EBCE41}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,14 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4522A3CE-41FA-423C-8C8C-9A18F13F5B4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4522A3CE-41FA-423C-8C8C-9A18F13F5B4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4522A3CE-41FA-423C-8C8C-9A18F13F5B4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4522A3CE-41FA-423C-8C8C-9A18F13F5B4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{712D1940-DE87-4E5A-AC94-A0F15B956A4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{712D1940-DE87-4E5A-AC94-A0F15B956A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{712D1940-DE87-4E5A-AC94-A0F15B956A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{712D1940-DE87-4E5A-AC94-A0F15B956A4C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{38CDE89F-DCFF-4A4A-AE71-100866EBCE41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{38CDE89F-DCFF-4A4A-AE71-100866EBCE41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38CDE89F-DCFF-4A4A-AE71-100866EBCE41}.Release|Any CPU.ActiveCfg = Release|Any CPU
