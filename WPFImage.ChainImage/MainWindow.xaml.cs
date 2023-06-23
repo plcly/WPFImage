@@ -108,7 +108,8 @@ namespace WPFImage.ChainImage
 
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
-
+            if (isLoading)
+                return;
             if (e.Key == Key.Right)
             {
                 ExecuteNextImage();
