@@ -32,6 +32,7 @@ namespace WPFImage.ChainImage
         private bool isNext;
         List<ChainImage> listChainImage;
         private bool deleteWhenClose;
+        private string specificDateStr;
         private bool isLoading;
         private static readonly object lockObj = new object();
 
@@ -43,6 +44,8 @@ namespace WPFImage.ChainImage
             destFolder = ConfigurationManager.AppSettings["destFolder"];
             preLoadNum = int.Parse(ConfigurationManager.AppSettings["preLoadNum"]);
             deleteWhenClose = bool.Parse(ConfigurationManager.AppSettings["deleteWhenClose"]);
+            specificDateStr = ConfigurationManager.AppSettings["specificDate"];
+            
             if (Directory.Exists(folder))
             {
                 fileList = Directory.GetFiles(folder, "*.jpg")
@@ -204,18 +207,25 @@ namespace WPFImage.ChainImage
 
         private string GetDestName()
         {
-            var today = DateTime.Now.ToString("yyyyMMdd");
-            var files = Directory.GetFiles(folder, today + "*.jpg");
+            if (string.IsNullOrEmpty(specificDateStr))
+            {
+                specificDateStr = DateTime.Now.ToString("yyyyMMdd");
+            }
+
+            var files = Directory.GetFiles(folder, specificDateStr + "*.jpg");
             if (files.Length == 0)
             {
-                return System.IO.Path.Combine(folder, today + ".JPG");
+                return System.IO.Path.Combine(folder, specificDateStr + ".JPG");
             }
-            return System.IO.Path.Combine(folder, today + "-" + (files.Length) + ".JPG");
+            return System.IO.Path.Combine(folder, specificDateStr + "-" + (files.Length) + ".JPG");
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            var today = DateTime.Now.ToString("yyyyMMdd");
+            if (string.IsNullOrEmpty(specificDateStr))
+            {
+                specificDateStr = DateTime.Now.ToString("yyyyMMdd");
+            }
             listChainImage = null;
             MyGrid.Children.Clear();
             GC.Collect(2);
@@ -225,7 +235,7 @@ namespace WPFImage.ChainImage
                 foreach (var file in allFile)
                 {
                     var fileName = System.IO.Path.GetFileName(file);
-                    if (fileName.StartsWith(today))
+                    if (fileName.StartsWith(specificDateStr))
                     {
                         var destFileName = System.IO.Path.Combine(destFolder, fileName);
                         if (!File.Exists(destFileName))
